@@ -8,7 +8,7 @@ const getMovies= async () => {
     throw new Error(response.status + ' ' + response.statusText);
     
 		const data = await response.json();
-      
+		
 		return data.results;
 	} catch (error) {
 		console.log(error);

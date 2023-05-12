@@ -1,19 +1,28 @@
 import { React, useState, useEffect } from "react";
 import getMovies from "./helpers/getMovies";
 import Movie from "./Movie";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { Link } from "react-router-dom";
 
 const Movies = () => {
   const [movies, setMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [user, setUser] = useState(null);
 
-  //Efectos
+  // Efectos
   useEffect(() => {
     getData();
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
-  // Logica funcional
+  // Lógica funcional
   const getData = () => {
     getMovies()
       .then((movies) => {
@@ -26,22 +35,27 @@ const Movies = () => {
     const input = document.querySelector("#inputSearch");
     setSearchTerm(input.value);
   };
-console.log(movies)
+
   return (
     <div>
       <h1>Busque su pelicula</h1>
       <input type="text" onKeyUp={searchMovie} id="inputSearch" />
-      {movies
-        .filter((movie) =>
-          movie.title.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-        .map((movie) => (
-          <>
-            <Link to={`/movie/${movie.id}`}>
-              <Movie key={movie.id} data={movie} />
-            </Link>
-          </>
-        ))}
+
+      {user != null ? (
+        movies
+          .filter((movie) =>
+            movie.title.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+          .map((movie) => (
+            <>
+              <Link to={`/movie/${movie.id}`}>
+                <Movie key={movie.id} data={movie} />
+              </Link>
+            </>
+          ))
+      ) : (
+        <p>Debe iniciar sesión</p>
+      )}
       {movies.filter((movie) =>
         movie.title.toLowerCase().includes(searchTerm.toLowerCase())
       ).length == 0 && <p>No se encontraron películas con ese título</p>}

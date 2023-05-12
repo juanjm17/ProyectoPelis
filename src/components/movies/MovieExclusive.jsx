@@ -1,15 +1,36 @@
-import { React, useState, useEffect } from "react";
-import getMovieById from "./helpers/getMovieById";
+import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
+import { getAuth } from "firebase/auth";
+
+import getMovieById from "./helpers/getMovieById";
 
 const MovieExclusive = () => {
   const [movie, setMovie] = useState({});
+  const [user, setUser] = useState(null);
 
   const { id } = useParams();
-console.log("hola")
+
+  const getAverage = (number) => {
+    const star = "⭐";
+    const log = star.repeat(number);
+
+    return log;
+  };
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   useEffect(() => {
     getData();
-  }, []);
+  }, [id]);
 
   const getData = () => {
     getMovieById(id)
@@ -19,13 +40,20 @@ console.log("hola")
       .catch((error) => console.error(error));
   };
 
-  console.log(movie);
-
   return (
     <div>
-      <h1>{movie.title}</h1>
-      <img src={`https://image.tmdb.org/t/p/w600_and_h900_bestv2${movie.poster_path}`} alt="" />
-      <Link to={"/main"} >Volver</Link>
+      {user ? (
+        <>
+          <h2>Titulo: {movie.title}</h2>
+          <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt="" />
+          <p>Descripcion: {movie.overview}</p>
+          <p>Fecha: {movie.release_date}</p>
+          <p>Valoracion: {getAverage(movie.vote_average)}</p>
+          <Link to={"/main"}>Volver</Link>
+        </>
+      ) : (
+        <p>Debe iniciar sesión para ver esta página.</p>
+      )}
     </div>
   );
 };

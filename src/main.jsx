@@ -10,9 +10,8 @@ import Nav from "./components/Nav";
 import MovieExclusive from "./components/movies/MovieExclusive";
 import "./index.css";
 import Login from "./components/Login";
-
-
-
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
 
 const router = createBrowserRouter([
   {
@@ -33,10 +32,13 @@ const router = createBrowserRouter([
   }
 ]);
 
+const App = () => {
+  return (
+    <div>
+      <Nav />
+      <RouterProvider router={router} />
+    </div>
+  );
+};
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-    
-  </React.StrictMode>
-);
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
