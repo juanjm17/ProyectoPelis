@@ -2,6 +2,8 @@ import { React, useState, useEffect } from "react";
 import getMovies from "./helpers/getMovies";
 import Movie from "./Movie";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import "../movies.css"
+
 
 import { Link } from "react-router-dom";
 
@@ -30,6 +32,7 @@ const Movies = () => {
       })
       .catch((error) => console.error(error));
   };
+  console.log(user)
 
   const searchMovie = () => {
     const input = document.querySelector("#inputSearch");
@@ -37,10 +40,12 @@ const Movies = () => {
   };
 
   return (
-    <div>
+    <div >
+      <div className="search">
       <h1>Busque su pelicula</h1>
       <input type="text" onKeyUp={searchMovie} id="inputSearch" />
-
+      </div>
+      <div className="movies-container">
       {user != null ? (
         movies
           .filter((movie) =>
@@ -48,8 +53,8 @@ const Movies = () => {
           )
           .map((movie) => (
             <>
-              <Link to={`/movie/${movie.id}`}>
-                <Movie key={movie.id} data={movie} />
+              <Link to={`/movie/${movie.id}`} >
+                <Movie key={movie.id}  data={movie}  />
               </Link>
             </>
           ))
@@ -59,6 +64,7 @@ const Movies = () => {
       {movies.filter((movie) =>
         movie.title.toLowerCase().includes(searchTerm.toLowerCase())
       ).length == 0 && <p>No se encontraron películas con ese título</p>}
+    </div>
     </div>
   );
 };

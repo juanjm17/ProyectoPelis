@@ -5,6 +5,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
+import "./login.css"
 
 const firebaseConfig = {
   apiKey: "AIzaSyDttN2mEiMpDOgT-8NU4e0wV4toCygfsHM",
@@ -56,16 +57,17 @@ console.log(localStorage)
   console.log(firebase);
 
   return (
-    <div>
+    <div className="container">
       <h1>Login</h1>
       <button onClick={handleLogin}>Iniciar sesión con Google</button>
       <ToastContainer />
       <p>
         ¿Aún no tienes cuenta? <Link to="/signup">Regístrate</Link>
       </p>
-      <button onClick={handleLogout}>Cerrar sesión</button>
+      <button onClick={handleLogout} className="logout-button">Cerrar sesión</button>
     </div>
   );
+  
 };
 
 export default Login;

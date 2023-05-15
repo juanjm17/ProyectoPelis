@@ -1,6 +1,7 @@
 import React from 'react';
 import { getAuth, signOut } from "firebase/auth";
 import { toast } from "react-toastify";
+import './nav.css';
 
 const Nav = () => {
   const handleLogout = () => {
@@ -17,10 +18,10 @@ const Nav = () => {
   };
 
   return (
-    <div>
+    <div className="nav">
       <nav>
         <ul>
-          <li><a onClick={handleLogout}>Logout</a></li>
+          <li><a onClick={handleLogout}>Cerrar sesión</a></li>
         </ul>
       </nav>
     </div>
